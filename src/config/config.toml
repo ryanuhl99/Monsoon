@@ -1,0 +1,70 @@
+[api_service.handler_http.paths]
+fetch_path = "../templates/api_service/handlers/http"
+build_path = "./api_service/handlers/http"
+
+[api_service.handler_http.files]
+"handler_http.rs" = ""
+"mod.rs" = ""
+
+[api_service.handler_http.dependencies]
+serde = "1.0"
+tokio = "1.44"
+axum = "0.7"
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+validator = "0.18"
+
+[api_service.auth_jwt.paths]
+fetch_path = "../templates/api_service/auth/jwt"
+build_path = "./api_service/auth/jwt"
+
+[api_service.auth_jwt.files]
+"auth_jwt.rs" = ""
+"mod.rs" = ""
+
+[api_service.auth_jwt.dependencies]
+jsonwebtoken = "9"
+chrono = "0.4"
+argon2 = "0.5"
+uuid = "1"
+thiserror = "1.0"
+
+[api_service.db_postgres.paths]
+fetch_path = "../templates/api_service/db"
+build_path = "./api_service/db"
+
+[api_service.db_postgres.files]
+"db_postgres.rs" = ""
+"mod.rs" = ""
+
+[api_service.db_postgres.dependencies]
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio", "macros"] }
+uuid = "1"
+chrono = "0.4"
+thiserror = "1.0"
+async-trait = "0.1"
+
+[global.errors.paths]
+fetch_path = "../templates/infra/errors"
+build_path = "./infra/errors"
+
+[global.errors.files]
+"errors.rs" = ""
+"mod.rs" = ""
+
+[global.errors.dependencies]
+anyhow = "1.0"
+thiserror = "1.0"
+
+[global.tracing.paths]
+fetch_path = "../templates/infra/tracing"
+build_path = "./infra/tracing"
+
+[global.tracing.files]
+"tracing.rs" = ""
+"mod.rs" = ""
+
+[global.tracing.dependencies]
+tracing = "0.1"
+tracing-subscriber = "0.3"
