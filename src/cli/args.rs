@@ -1,10 +1,12 @@
 use clap::{Parser, Subcommand, ValueEnum};
 
+use crate::config::template_spec::{TemplateSpec, TemplateConfig};
+
 // ex: monsoon generate api-service "Datasource" "./Code/Projects" --transport http --db sqlite --auth jwt --repo --migration
 
 #[derive(Parser, Debug)]
 #[command(name = "monsoon", version = "1.0", about = "Backend scaffolding CLI tool")]
-struct Cli {
+pub struct Cli {
     #[command(subcommand)]
     command: Commands,
 }
@@ -35,6 +37,11 @@ enum Commands {
     },
 }
 
+pub trait ConfigMapper {
+    fn map_config(&self) -> &'static str;
+    fn get_config<'a>(&self, spec: TemplateSpec) -> Result<&'a TemplateConfig, Error>;
+}
+
 #[derive(Clone, Debug, ValueEnum)]
 enum Archetype {
     ApiService,
@@ -42,10 +49,36 @@ enum Archetype {
     SchedulerService,
 }
 
+impl ConfigMapper for Archetype {
+    fn map_config(&self) -> &'static str {
+        match self {
+            Archetype::ApiService => "api_service",
+            Archetype::WorkerService => "worker_service",
+            Archetype::SchedulerService => "scheduler_service",
+        }
+    }
+
+    fn get_config<'a>(&self, spec: TemplateSpec) -> &'a TemplateConfig {
+        match spec.service_config.get(self.map_config()) {
+            Some(value) => value,
+            None => 
+        }
+    }
+}
+
 #[derive(Clone, Debug, ValueEnum)]
 enum Transport {
     Http,
     Grpc,
+}
+
+impl ConfigMapper for Transport {
+    fn map_config(&self) -> &'static str {
+        match self {
+            Transport::Http => "http_handler",
+            Transport::Grpc => "grpc_handler",
+        }
+    }
 }
 
 #[derive(Clone, Debug, ValueEnum)]
@@ -56,9 +89,30 @@ enum Db {
     None,
 }
 
+impl ConfigMapper for Db {
+    fn map_config(&self) -> &'static str {
+        match self {
+            Db::Postgres => "db_postgres",
+            Db::Mysql => "db_mysql",
+            Db::Sqlite => "db_sqlite",
+            Db::None => "db_none",
+        }
+    }
+}
+
 #[derive(Clone, Debug, ValueEnum)]
 enum Auth {
     Jwt,
     Oauth,
     Session,
+}
+
+impl ConfigMapper for Auth {
+    fn map_config(&self) -> &'static str {
+        match self {
+            Auth::Jwt => "auth_jwt",
+            Auth::Oauth => "auth_oauth",
+            Auth::Session => "auth_session",
+        }
+    }
 }

@@ -2,14 +2,16 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
-pub struct Template {
-    #[serde(default)]
+pub struct TemplateSpec {
+    #[serde(rename = "api_service")]
     pub service_config: HashMap<String, TemplateConfig>,
+
+    #[serde(rename = "global")]
     pub global_config: HashMap<String, TemplateConfig>
 }
 
 #[derive(Debug, Deserialize)]
-struct TemplateConfig {
+pub struct TemplateConfig {
     paths: TemplatePath,
 
     #[serde(default)]
